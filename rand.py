@@ -1,3 +1,5 @@
+import math
+
 def rand(iteration: int = 50) -> float: 
     starting_value = 1_000
     multiplier = 24_693
@@ -11,3 +13,6 @@ def rand(iteration: int = 50) -> float:
         u = x / modulus
     
     return u
+
+def sb_wait_time(iteration: int = 50) -> float:
+    return math.pow((8 * rand(iteration)), 2.0/3)
