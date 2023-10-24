@@ -7,20 +7,19 @@ ticket_list = []
 
 # Call loop
 def run(iterator: int = 50):
-    calls = 0
     ticket = False
     time_sec = 0.0
     for calls in range(1,4):
         time_sec += 3
-        x = sb_wait_time(calls*iterator)
+        x = sb_wait_time(iterator+calls*1000)
         # Waited less than 1.5 mins
         if x < 1.5:
             time_sec += (x * 60)
             # Connect to agent
-            agent = rand(calls*iterator) # Equal to rand func
+            agent = rand(iterator+calls*2000) # Equal to rand func
             # print(agent)
             time_sec += 5
-            if agent <= 0.2 and agent >= 0.0:
+            if agent <= 0.2:
                 time_sec += 72
                 ticket = True
             elif agent <= 0.5 and agent > 0.2:
@@ -29,7 +28,7 @@ def run(iterator: int = 50):
             elif agent <= 0.6 and agent > 0.5:
                 time_sec += 81
                 ticket = True
-            elif agent <= 1.0 and agent > 0.6:
+            elif agent > 0.6:
                 time_sec += 114
                 ticket = True
             break
@@ -53,9 +52,12 @@ print("Original list:\n", time_list)
 time_list.sort()
 print("Sorted list:\n", time_list)
 
+f = open("500w_values.txt", "w")
+f.write(str(time_list))
+
 cnt = 0
 for i in range(0,len(time_list)):
-    if time_list[i] == 285.0:
+    if time_list[i] >= 381.0:
         cnt += 1
 
 print(cnt)
@@ -69,7 +71,18 @@ print("1st Quartile: ", quantile(time_list, 0.25))
 #Third Quartile
 print("3rd Quartile: ", quantile(time_list, .75))
 
-pyplot.plot(time_list)
+cdf = []
+for i in range(1, 501):
+    cdf.append(i / 500)
+
+
+pyplot.plot(time_list, cdf)
+pyplot.grid(which='major', visible=True)
+pyplot.grid(which='minor', visible=True)
+pyplot.minorticks_on()
+pyplot.xlabel("Time to Ticket/No Ticket (sec)")
+pyplot.ylabel("Cumulative Probability")
+pyplot.title("CDF of Time to Ticket")
 pyplot.show()
 
 # print(run(.5, 20))
